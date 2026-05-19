@@ -1,0 +1,24 @@
+<div style="position: relative;">
+  <button
+    type="button"
+    [ngStyle]="triggerStyle()"
+    (click)="toggleOpen()"
+  >
+    <span>{{ selectedLabel() ?? placeholder() }}</span>
+    <span style="color: #888888;">[{{ open() ? '▲' : '▼' }}]</span>
+  </button>
+
+  @if (open()) {
+    <div style="position: absolute; top: 100%; left: 0; right: 0; background: #111111; border: 1px solid #ffffff; z-index: 50; max-height: 200px; overflow-y: auto;">
+      @for (opt of options(); track opt.value) {
+        <button
+          type="button"
+          [ngStyle]="optionStyle(opt.value)"
+          (click)="select(opt.value)"
+        >
+          {{ opt.label }}
+        </button>
+      }
+    </div>
+  }
+</div>

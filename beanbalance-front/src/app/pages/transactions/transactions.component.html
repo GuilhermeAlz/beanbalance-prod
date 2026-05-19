@@ -1,0 +1,148 @@
+<app-page-header title="TRANSACTIONS">
+  <app-button (clicked)="openDrawer()">+ NEW TRANSACTION</app-button>
+</app-page-header>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="filter-item w160">
+    <app-select
+      [value]="filterAccount()"
+      [options]="allAccountOptions()"
+      (valueChange)="setFilterAccount($event)"
+    />
+  </div>
+  <div class="filter-item w160">
+    <app-select
+      [value]="filterCategory()"
+      [options]="allCategoryOptions()"
+      (valueChange)="setFilterCategory($event)"
+    />
+  </div>
+  <div class="filter-item w130">
+    <app-select
+      [value]="filterType()"
+      [options]="filterTypeOptions"
+      (valueChange)="setFilterType($event)"
+    />
+  </div>
+  <input
+    type="month"
+    class="month-input"
+    [value]="filterMonth()"
+    (change)="setFilterMonth($event)"
+  />
+  <button class="clear-btn" (click)="clearFilters()">CLEAR</button>
+</div>
+
+<!-- Table -->
+<div class="table">
+  <div class="table-header">
+    <span>#</span>
+    <span>DATE</span>
+    <span>DESCRIPTION</span>
+    <span>CATEGORY</span>
+    <span>ACCOUNT</span>
+    <span>TYPE</span>
+    <span class="align-right">AMOUNT</span>
+    <span></span>
+  </div>
+
+  @if (pageData().length === 0) {
+    <div class="no-tx">NO TRANSACTIONS FOUND</div>
+  } @else {
+    @for (tx of pageData(); track tx.id; let i = $index) {
+      <div class="row">
+        <span class="col-idx">{{ formatIndex(rowIndex(i)) }}</span>
+        <span class="col-date">{{ formatDate(tx.date) }}</span>
+        <span class="col-desc">{{ tx.description }}</span>
+        <span class="col-cat">{{ getCategoryName(tx.categoryId).toUpperCase() }}</span>
+        <span class="col-acc">{{ getAccountFirstWord(tx.accountId) }}</span>
+        <span class="col-type">
+          <span class="type-badge" [class.income]="tx.type === 'INCOME'">{{ tx.type }}</span>
+        </span>
+        <span class="col-amount" [class.income]="tx.type === 'INCOME'">
+          {{ tx.type === 'INCOME' ? '+' : '−' }} {{ formatBRL(tx.amount) }}
+        </span>
+        <span class="col-del">
+          <button class="del-btn" (click)="deleteId.set(tx.id)">×</button>
+        </span>
+      </div>
+    }
+  }
+</div>
+
+<!-- Pagination -->
+<div class="pagination-row">
+  <span>SHOWING {{ showingStart() }}–{{ showingEnd() }} OF {{ filtered().length }} TRANSACTIONS</span>
+  <app-pagination
+    [page]="page()"
+    [total]="totalPages()"
+    (pageChange)="page.set($event)"
+  />
+</div>
+
+<!-- Create Drawer -->
+<app-drawer
+  [open]="drawerOpen()"
+  title="NEW TRANSACTION"
+  (closed)="drawerOpen.set(false)"
+>
+  <app-form-field label="AMOUNT">
+    <app-input
+      [value]="formAmount()"
+      (valueChange)="formAmount.set($event)"
+      type="number"
+      textAlign="right"
+      [extraStyle]="{ fontSize: '20px' }"
+    />
+  </app-form-field>
+  <app-form-field label="TYPE">
+    <app-toggle
+      [value]="formType()"
+      [options]="typeOptions"
+      (valueChange)="setFormType($event)"
+    />
+  </app-form-field>
+  <app-form-field label="DATE">
+    <app-input
+      [value]="formDate()"
+      (valueChange)="formDate.set($event)"
+      type="date"
+    />
+  </app-form-field>
+  <app-form-field label="ACCOUNT">
+    <app-select
+      [value]="formAccountId()"
+      [options]="accountOptions()"
+      placeholder="SELECT ACCOUNT..."
+      (valueChange)="formAccountId.set($event)"
+    />
+  </app-form-field>
+  <app-form-field label="CATEGORY">
+    <app-select
+      [value]="formCategoryId()"
+      [options]="categoryOptions()"
+      placeholder="SELECT CATEGORY..."
+      (valueChange)="formCategoryId.set($event)"
+    />
+  </app-form-field>
+  <app-form-field label="DESCRIPTION (OPTIONAL)">
+    <app-input
+      [value]="formDescription()"
+      (valueChange)="formDescription.set($event)"
+    />
+  </app-form-field>
+  <div drawerFooter class="drawer-footer">
+    <app-button variant="ghost" [extraStyle]="{ flex: '1' }" (clicked)="drawerOpen.set(false)">CANCEL</app-button>
+    <app-button [extraStyle]="{ flex: '2' }" (clicked)="handleSave()">SAVE TRANSACTION</app-button>
+  </div>
+</app-drawer>
+
+<!-- Delete Modal -->
+<app-delete-modal
+  [open]="!!deleteId()"
+  [entityName]="deleteTarget()?.description || 'TRANSACTION'"
+  [note]="deleteAccName() ? 'THIS WILL REVERSE THE BALANCE CHANGE ON ' + deleteAccName() + '.' : ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="deleteId.set(null)"
+/>

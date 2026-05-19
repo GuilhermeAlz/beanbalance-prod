@@ -1,0 +1,97 @@
+<div class="page">
+  <!-- Row 1 — Summary Cards -->
+  <div class="summary-grid">
+    <!-- Total Balance -->
+    <div class="card">
+      <div class="card-label">TOTAL BALANCE</div>
+      <div class="card-value">{{ formatBRL(totalBalance()) }}</div>
+      <div class="card-sub">ACROSS {{ accountApi.items().length }} ACCOUNTS</div>
+    </div>
+
+    <!-- This Month Income -->
+    <div class="card">
+      <div class="card-label">THIS MONTH INCOME</div>
+      <div class="card-value">+ {{ formatBRL(monthIncome()) }}</div>
+      <div class="card-sub">{{ currentMonth | uppercase }}</div>
+    </div>
+
+    <!-- This Month Expenses -->
+    <div class="card">
+      <div class="card-label">THIS MONTH EXPENSES</div>
+      <div class="card-value card-value-dim">− {{ formatBRL(monthExpense()) }}</div>
+      <div class="card-sub">{{ currentMonth | uppercase }}</div>
+    </div>
+  </div>
+
+  <!-- Row 2 — Two Columns -->
+  <div class="content-grid">
+    <!-- Recent Transactions -->
+    <div>
+      <app-section-header title="RECENT TRANSACTIONS" />
+      <div class="table-box">
+        <!-- Table header -->
+        <div class="table-header">
+          <span>DATE</span>
+          <span>DESCRIPTION</span>
+          <span>CATEGORY</span>
+          <span>ACCOUNT</span>
+          <span class="col-right">AMOUNT</span>
+        </div>
+
+        @for (tx of recent(); track tx.id) {
+          <div class="table-row">
+            <span class="col-muted">{{ formatDate(tx.date) }}</span>
+            <span class="col-white col-truncate">{{ tx.description }}</span>
+            <span class="col-muted col-truncate">{{ getCat(tx.categoryId)?.name?.toUpperCase() || '—' }}</span>
+            <span class="col-muted col-truncate">{{ getAccLabel(tx.accountId) }}</span>
+            <span class="col-right col-tabular" [class.col-income]="tx.type === 'INCOME'" [class.col-muted]="tx.type !== 'INCOME'">
+              {{ tx.type === 'INCOME' ? '+' : '−' }} {{ formatBRL(tx.amount) }}
+            </span>
+          </div>
+        }
+
+        <!-- View all -->
+        <div class="view-all-row">
+          <button class="view-all-btn" (click)="goToTransactions()">
+            VIEW ALL TRANSACTIONS →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget Overview -->
+    <div>
+      <app-section-header title="BUDGET OVERVIEW" />
+      <div class="budget-box">
+        @for (b of budgets(); track b.id; let i = $index) {
+          <div>
+            <div class="budget-row">
+              <span class="budget-name">{{ b.categoryName.toUpperCase() }}</span>
+              @if (b.spent > b.limit) {
+                <app-badge variant="over">OVER BUDGET</app-badge>
+              }
+            </div>
+            <app-progress-bar [value]="b.spent" [max]="b.limit" />
+            <div class="budget-detail">
+              {{ formatBRL(b.spent) }} / {{ formatBRL(b.limit) }} —
+              @if (b.spent > b.limit) {
+                {{ formatBRL(b.spent - b.limit) }} OVER
+              } @else {
+                {{ formatBRL(b.limit - b.spent) }} REMAINING
+              }
+            </div>
+            @if (i < budgets().length - 1) {
+              <div class="budget-divider"></div>
+            }
+          </div>
+        }
+
+        <div class="view-all-budget">
+          <button class="view-all-btn" (click)="goToBudgets()">
+            VIEW ALL BUDGETS →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

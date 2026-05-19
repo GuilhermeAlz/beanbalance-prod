@@ -1,0 +1,93 @@
+<app-page-header title="CATEGORIES">
+  <app-button (clicked)="openCreate()">+ NEW CATEGORY</app-button>
+</app-page-header>
+
+<!-- System Categories -->
+<div class="section">
+  <div class="section-divider">
+    <span class="section-label">SYSTEM CATEGORIES</span>
+    <span class="system-badge">SYSTEM</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="table">
+    <div class="table-header system-cols">
+      <span>NAME</span>
+      <span>DESCRIPTION</span>
+      <span>TYPE</span>
+    </div>
+    @for (cat of systemCats(); track cat.id) {
+      <div class="row system-cols">
+        <span class="col-name">{{ cat.name.toUpperCase() }}</span>
+        <span class="col-desc">{{ cat.description }}</span>
+        <span class="col-type-sys">SYSTEM</span>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Custom Categories -->
+<div class="section">
+  <div class="section-divider">
+    <span class="section-label">MY CATEGORIES</span>
+    <div class="divider-line"></div>
+  </div>
+
+  @if (customCats().length === 0) {
+    <app-empty-state
+      label="YOU HAVE NO CUSTOM CATEGORIES YET"
+      action="+ CREATE ONE"
+      (actionClicked)="openCreate()"
+    />
+  } @else {
+    <div class="table">
+      <div class="table-header custom-cols">
+        <span>NAME</span>
+        <span>DESCRIPTION</span>
+        <span>CREATED</span>
+        <span>ACTIONS</span>
+      </div>
+      @for (cat of customCats(); track cat.id) {
+        <div class="row custom-cols">
+          <span class="col-name">{{ cat.name.toUpperCase() }}</span>
+          <span class="col-desc">{{ cat.description }}</span>
+          <span class="col-date">{{ formatDate(cat.createdAt) }}</span>
+          <div class="row-actions">
+            <button class="action-btn" (click)="openEdit(cat)">EDIT</button>
+            <button class="action-btn" (click)="deleteId.set(cat.id)">DELETE</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Drawer -->
+<app-drawer
+  [open]="drawerOpen()"
+  [title]="editId() ? 'EDIT CATEGORY' : 'NEW CATEGORY'"
+  (closed)="drawerOpen.set(false)"
+>
+  <app-form-field label="NAME">
+    <app-input [value]="formName()" (valueChange)="formName.set($event)" />
+  </app-form-field>
+  <app-form-field label="DESCRIPTION (OPTIONAL)">
+    <app-textarea
+      [value]="formDescription()"
+      [rows]="3"
+      (valueChange)="formDescription.set($event)"
+    />
+  </app-form-field>
+  <div drawerFooter class="drawer-footer">
+    <app-button variant="ghost" [extraStyle]="{ flex: '1' }" (clicked)="drawerOpen.set(false)">CANCEL</app-button>
+    <app-button [extraStyle]="{ flex: '2' }" (clicked)="handleSave()">SAVE CATEGORY</app-button>
+  </div>
+</app-drawer>
+
+<!-- Delete Modal -->
+<app-delete-modal
+  [open]="!!deleteId()"
+  [entityName]="deleteTarget()?.name?.toUpperCase() ?? ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="deleteId.set(null)"
+/>

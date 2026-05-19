@@ -1,0 +1,11 @@
+<div class="pagination">
+  <button class="pag-btn" [disabled]="page() === 1" (click)="prev()">&lt;</button>
+  @for (p of pages(); track p) {
+    <button
+      class="pag-btn"
+      [class.active]="p === page()"
+      (click)="pageChange.emit(p)"
+    >{{ ('' + p).padStart(2, '0') }}</button>
+  }
+  <button class="pag-btn" [disabled]="page() === total()" (click)="next()">&gt;</button>
+</div>

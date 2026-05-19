@@ -1,0 +1,105 @@
+<!-- Header with month nav -->
+<div class="top-bar">
+  <h1 class="page-title">BUDGETS</h1>
+  <div class="month-nav">
+    <button class="nav-btn" (click)="prevMonth()">&lt;</button>
+    <span class="month-label">{{ monthLabel() }}</span>
+    <button class="nav-btn" (click)="nextMonth()">&gt;</button>
+  </div>
+  <app-button (clicked)="openCreate()">+ NEW BUDGET</app-button>
+</div>
+
+@if (monthBudgets().length === 0) {
+  <app-empty-state
+    [label]="'NO BUDGETS FOR ' + monthLabel()"
+    action="+ CREATE ONE"
+    (actionClicked)="openCreate()"
+  />
+} @else {
+  <div class="cards">
+    @for (b of monthBudgets(); track b.id) {
+      <div class="card">
+        <div class="card-header">
+          <span class="cat-name">{{ b.categoryName.toUpperCase() }}</span>
+          @if (isOver(b)) {
+            <span class="over-badge">OVER BUDGET</span>
+          }
+        </div>
+
+        <app-progress-bar [value]="b.spent" [max]="b.limit" />
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">LIMIT</div>
+            <div class="stat-value">{{ formatBRL(b.limit) }}</div>
+          </div>
+          <div class="stat center">
+            <div class="stat-label">SPENT</div>
+            <div class="stat-value" [class.muted]="isOver(b)">
+              {{ formatBRL(b.spent) }}{{ isOver(b) ? ' !' : '' }}
+            </div>
+          </div>
+          <div class="stat right">
+            <div class="stat-label">LEFT</div>
+            <div class="stat-value" [class.muted]="isOver(b)">
+              {{ isOver(b) ? '−' + formatBRL(remaining(b) * -1) : formatBRL(remaining(b)) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="footer-label">{{ formatMonthLabel(b.month) }}</span>
+          <div class="actions">
+            <button class="action-btn" (click)="openEdit(b)">EDIT</button>
+            <button class="action-btn" (click)="deleteId.set(b.id)">DELETE</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Drawer -->
+<app-drawer
+  [open]="drawerOpen()"
+  [title]="editId() ? 'EDIT BUDGET' : 'NEW BUDGET'"
+  (closed)="drawerOpen.set(false)"
+>
+  <app-form-field label="CATEGORY">
+    <app-select
+      [value]="formCategoryId()"
+      [options]="categoryOptions()"
+      placeholder="SELECT CATEGORY..."
+      (valueChange)="formCategoryId.set($event)"
+    />
+  </app-form-field>
+  <app-form-field label="SPENDING LIMIT">
+    <app-input
+      [value]="formLimit()"
+      (valueChange)="formLimit.set($event)"
+      type="number"
+      textAlign="right"
+      [extraStyle]="{ fontSize: '18px' }"
+    />
+  </app-form-field>
+  <app-form-field label="REFERENCE MONTH">
+    <app-input
+      [value]="formMonth()"
+      (valueChange)="formMonth.set($event)"
+      [disabled]="!!editId()"
+      [extraStyle]="editId() ? { color: '#444444' } : {}"
+    />
+  </app-form-field>
+  <div drawerFooter class="drawer-footer">
+    <app-button variant="ghost" [extraStyle]="{ flex: '1' }" (clicked)="drawerOpen.set(false)">CANCEL</app-button>
+    <app-button [extraStyle]="{ flex: '2' }" (clicked)="handleSave()">SAVE BUDGET</app-button>
+  </div>
+</app-drawer>
+
+<!-- Delete Modal -->
+<app-delete-modal
+  [open]="!!deleteId()"
+  [entityName]="'BUDGET: ' + deleteTargetCatName()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="deleteId.set(null)"
+/>

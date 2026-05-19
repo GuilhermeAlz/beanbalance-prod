@@ -1,0 +1,8 @@
+<div class="empty-state">
+  <span class="label">{{ label() }}</span>
+  @if (action()) {
+    <button class="action-btn" type="button" (click)="actionClicked.emit()">
+      {{ action() }}
+    </button>
+  }
+</div>

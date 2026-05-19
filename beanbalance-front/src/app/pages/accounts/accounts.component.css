@@ -1,0 +1,82 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 100ms;
+}
+
+.card:hover {
+  border-color: #ffffff;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-name {
+  font-size: 15px;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+}
+
+.card-balance {
+  font-size: 20px;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+.card-balance.negative {
+  color: #888888;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-date {
+  font-size: 11px;
+  color: #888888;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #888888;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 100ms;
+}
+
+.action-btn:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}

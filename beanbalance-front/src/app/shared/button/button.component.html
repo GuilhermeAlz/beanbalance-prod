@@ -1,0 +1,10 @@
+<button
+  [type]="type()"
+  [disabled]="disabled()"
+  [ngStyle]="buttonStyle()"
+  (mouseenter)="hovered.set(true)"
+  (mouseleave)="hovered.set(false)"
+  (click)="clicked.emit()"
+>
+  <ng-content />
+</button>

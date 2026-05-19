@@ -1,0 +1,20 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+h1 {
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

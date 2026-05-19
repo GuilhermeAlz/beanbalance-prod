@@ -1,0 +1,106 @@
+.section {
+  margin-bottom: 32px;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-label {
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.system-badge {
+  font-size: 10px;
+  border: 1px solid #444444;
+  color: #555555;
+  padding: 1px 6px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+
+.table {
+  border: 1px solid #2a2a2a;
+  background: #111111;
+}
+
+.table-header {
+  display: grid;
+  padding: 8px 16px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.1em;
+}
+
+.system-cols {
+  grid-template-columns: 150px 1fr 80px;
+}
+
+.custom-cols {
+  grid-template-columns: 150px 1fr 110px 140px;
+}
+
+.row {
+  display: grid;
+  padding: 10px 16px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  align-items: center;
+  transition: background 100ms;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.col-name { color: #ffffff; }
+.col-desc { color: #888888; }
+.col-date { color: #888888; }
+
+.col-type-sys {
+  font-size: 10px;
+  color: #444444;
+  letter-spacing: 0.08em;
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #888888;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 100ms;
+}
+
+.action-btn:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}

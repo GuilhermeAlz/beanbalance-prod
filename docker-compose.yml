@@ -1,0 +1,48 @@
+services:
+
+  auth-api:
+    build:
+      context: ./beanbalance-authentication-ms
+      dockerfile: Dockerfile
+    container_name: beanbalance-auth-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: >-
+        Host=${AUTH_DB_HOST};Port=5432;Database=auth_db;Username=${AUTH_DB_USER};Password=${AUTH_DB_PASSWORD}
+      Jwt__Key: "${JWT_SECRET}"
+      Jwt__Issuer: AuthMicroservice
+      Jwt__Audience: SpringBootApp
+      Cors__AllowedOrigins: "${ALLOWED_ORIGINS}"
+    restart: unless-stopped
+
+  beanbalance-api:
+    build:
+      context: ./beanbalance
+      dockerfile: Dockerfile
+    container_name: beanbalance-spring-api
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://${BEAN_DB_HOST}:5432/beanbalance"
+      SPRING_DATASOURCE_USERNAME: "${BEAN_DB_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${BEAN_DB_PASSWORD}"
+      APP_SECURITY_JWT_SECRET: "${JWT_SECRET}"
+      APP_SECURITY_JWT_ISSUER: AuthMicroservice
+      APP_SECURITY_JWT_AUDIENCE: SpringBootApp
+      APP_CORS_ALLOWED_ORIGINS: "${ALLOWED_ORIGINS}"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./beanbalance-front
+      dockerfile: Dockerfile
+    container_name: beanbalance-frontend
+    environment:
+      DOMAIN: "${DOMAIN}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - auth-api
+      - beanbalance-api
+    restart: unless-stopped

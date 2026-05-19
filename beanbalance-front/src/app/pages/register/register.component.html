@@ -1,0 +1,81 @@
+<div class="page">
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-row">
+      <div class="logo-box">BB</div>
+      <span class="logo-text">BEANBALANCE</span>
+    </div>
+    <div class="logo-line"></div>
+  </div>
+
+  <!-- Form -->
+  <form class="form-panel" (submit)="handleSubmit($event)">
+    <!-- Username -->
+    <div class="field">
+      <label class="field-label">
+        USERNAME <span class="hint">(MIN 3 CHARACTERS)</span>
+      </label>
+      <input
+        type="text"
+        [value]="username()"
+        (input)="username.set($any($event.target).value)"
+        (focus)="focus('username')"
+        (blur)="blur('username')"
+        [ngStyle]="inputStyle('username')"
+      />
+      @if (errors()['username']) {
+        <div class="error">! {{ errors()['username'] }}</div>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label class="field-label">EMAIL</label>
+      <input
+        type="email"
+        [value]="email()"
+        (input)="email.set($any($event.target).value)"
+        (focus)="focus('email')"
+        (blur)="blur('email')"
+        [ngStyle]="inputStyle('email')"
+      />
+      @if (errors()['email']) {
+        <div class="error">! {{ errors()['email'] }}</div>
+      }
+    </div>
+
+    <!-- Password -->
+    <div class="field field-last">
+      <label class="field-label">
+        PASSWORD <span class="hint">(MIN 6 CHARACTERS)</span>
+      </label>
+      <input
+        type="password"
+        [value]="password()"
+        (input)="password.set($any($event.target).value)"
+        (focus)="focus('password')"
+        (blur)="blur('password')"
+        [ngStyle]="inputStyle('password')"
+      />
+      @if (errors()['password']) {
+        <div class="error">! {{ errors()['password'] }}</div>
+      }
+    </div>
+
+    <button
+      type="submit"
+      [ngStyle]="submitBtnStyle()"
+      (mouseenter)="submitHovered.set(true)"
+      (mouseleave)="submitHovered.set(false)"
+    >
+      CREATE ACCOUNT
+    </button>
+
+    <div class="footer-link">
+      ALREADY HAVE AN ACCOUNT?
+      <a routerLink="/login" class="link">[LOGIN]</a>
+    </div>
+  </form>
+
+  <div class="version">v1.0</div>
+</div>

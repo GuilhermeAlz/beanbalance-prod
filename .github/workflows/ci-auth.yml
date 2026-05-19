@@ -1,0 +1,78 @@
+name: Auth MS CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'beanbalance-authentication-ms/**'
+      - '.github/workflows/ci-auth.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'beanbalance-authentication-ms/**'
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        working-directory: beanbalance-authentication-ms
+        run: dotnet restore
+
+      - name: Build
+        working-directory: beanbalance-authentication-ms
+        run: dotnet build --no-restore --configuration Release
+
+  build-push:
+    name: Build & Push Docker image
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: beanbalance-authentication-ms
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/beanbalance-auth-ms:latest
+            ghcr.io/${{ github.repository_owner }}/beanbalance-auth-ms:${{ github.sha }}
+
+  deploy:
+    name: Deploy to EC2
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/beanbalance
+            git pull origin main
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull auth-api
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f

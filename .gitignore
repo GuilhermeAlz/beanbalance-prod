@@ -1,0 +1,8 @@
+# Production secrets — create this file manually on the server, never commit it
+.env
+
+# Terraform — contains DB passwords and SSH keys
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup

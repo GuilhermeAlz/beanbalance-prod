@@ -1,0 +1,69 @@
+<app-page-header title="ACCOUNTS">
+  <app-button (clicked)="openCreate()">+ NEW ACCOUNT</app-button>
+</app-page-header>
+
+@if (accounts().length === 0) {
+  <app-empty-state
+    label="NO ACCOUNTS FOUND"
+    action="+ CREATE YOUR FIRST ACCOUNT"
+    (actionClicked)="openCreate()"
+  />
+} @else {
+  <div class="grid">
+    @for (acc of accounts(); track acc.id) {
+      <div class="card" (click)="goToDetail(acc.id)">
+        <div class="card-top">
+          <span class="card-name">{{ acc.name.toUpperCase() }}</span>
+          <app-badge>{{ acc.type }}</app-badge>
+        </div>
+        <div class="card-balance" [class.negative]="acc.balance < 0">
+          {{ formatBRL(acc.balance) }}
+        </div>
+        <div class="card-footer">
+          <span class="card-date">CREATED {{ formatDate(acc.createdAt) }}</span>
+          <div class="card-actions">
+            <button class="action-btn" (click)="$event.stopPropagation(); openEdit(acc)">EDIT</button>
+            <button class="action-btn" (click)="$event.stopPropagation(); deleteId.set(acc.id)">DELETE</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<app-drawer
+  [open]="drawerOpen()"
+  [title]="editId() ? 'EDIT ACCOUNT' : 'NEW ACCOUNT'"
+  (closed)="drawerOpen.set(false)"
+>
+  <app-form-field label="ACCOUNT NAME">
+    <app-input [value]="formName()" (valueChange)="formName.set($event)" />
+  </app-form-field>
+  <app-form-field label="ACCOUNT TYPE">
+    <app-select
+      [value]="formType()"
+      [options]="typeOptions"
+      placeholder="SELECT TYPE..."
+      (valueChange)="formType.set($event)"
+    />
+  </app-form-field>
+  <app-form-field label="INITIAL BALANCE">
+    <app-input
+      [value]="formBalance()"
+      (valueChange)="formBalance.set($event)"
+      type="number"
+      textAlign="right"
+    />
+  </app-form-field>
+  <div drawerFooter class="drawer-footer">
+    <app-button variant="ghost" [extraStyle]="{ flex: '1' }" (clicked)="drawerOpen.set(false)">CANCEL</app-button>
+    <app-button [extraStyle]="{ flex: '2' }" (clicked)="handleSave()">SAVE ACCOUNT</app-button>
+  </div>
+</app-drawer>
+
+<app-delete-modal
+  [open]="!!deleteId()"
+  [entityName]="deleteTarget()?.name || ''"
+  (confirmed)="confirmDelete()"
+  (cancelled)="deleteId.set(null)"
+/>

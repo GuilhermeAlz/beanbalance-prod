@@ -1,0 +1,116 @@
+@if (!account()) {
+  <div class="not-found">
+    ACCOUNT NOT FOUND.
+    <button class="back-link" (click)="goToAccounts()">GO BACK</button>
+  </div>
+} @else {
+  <button class="back-btn" (click)="goToAccounts()">← BACK TO ACCOUNTS</button>
+
+  <div class="acc-header">
+    <div class="acc-header-left">
+      <div class="acc-title-row">
+        <h1 class="acc-name">{{ account()!.name.toUpperCase() }}</h1>
+        <app-badge>{{ account()!.type }}</app-badge>
+      </div>
+      <div class="acc-balance" [class.negative]="account()!.balance < 0">
+        {{ formatBRL(account()!.balance) }}
+      </div>
+      <div class="acc-created">CREATED {{ formatDate(account()!.createdAt) }}</div>
+    </div>
+    <div class="acc-header-actions">
+      <app-button variant="ghost" (clicked)="openEditAccount()">EDIT ACCOUNT</app-button>
+      <app-button (clicked)="deleteAccountModal.set(true)">DELETE ACCOUNT</app-button>
+    </div>
+  </div>
+
+  <div class="tx-count">
+    TRANSACTIONS FOR THIS ACCOUNT ({{ accountTxs().length }})
+  </div>
+
+  <div class="table">
+    <div class="table-header">
+      <span>#</span>
+      <span>DATE</span>
+      <span>DESCRIPTION</span>
+      <span>CATEGORY</span>
+      <span>TYPE</span>
+      <span class="align-right">AMOUNT</span>
+      <span></span>
+    </div>
+
+    @if (pageData().length === 0) {
+      <div class="no-tx">NO TRANSACTIONS FOR THIS ACCOUNT</div>
+    } @else {
+      @for (tx of pageData(); track tx.id; let i = $index) {
+        <div class="row">
+          <span class="col-idx">{{ formatIndex(rowIndex(i)) }}</span>
+          <span class="col-date">{{ formatDate(tx.date) }}</span>
+          <span class="col-desc">{{ tx.description }}</span>
+          <span class="col-cat">{{ getCategoryName(tx.categoryId).toUpperCase() }}</span>
+          <span class="col-type">
+            <span class="type-badge" [class.income]="tx.type === 'INCOME'">{{ tx.type }}</span>
+          </span>
+          <span class="col-amount" [class.income]="tx.type === 'INCOME'">
+            {{ tx.type === 'INCOME' ? '+' : '−' }} {{ formatBRL(tx.amount) }}
+          </span>
+          <span class="col-del">
+            <button class="del-btn" (click)="deleteTxId.set(tx.id)">×</button>
+          </span>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="pagination-row">
+    <span>SHOWING {{ showingStart() }}–{{ showingEnd() }} OF {{ accountTxs().length }}</span>
+    <app-pagination
+      [page]="page()"
+      [total]="totalPages()"
+      (pageChange)="page.set($event)"
+    />
+  </div>
+
+  <app-delete-modal
+    [open]="deleteAccountModal()"
+    [entityName]="account()!.name.toUpperCase()"
+    (confirmed)="confirmDeleteAccount()"
+    (cancelled)="deleteAccountModal.set(false)"
+  />
+  <app-delete-modal
+    [open]="!!deleteTxId()"
+    [entityName]="deleteTxTarget()?.description || 'TRANSACTION'"
+    [note]="'THIS WILL REVERSE THE BALANCE CHANGE ON ' + account()!.name.toUpperCase() + '.'"
+    (confirmed)="confirmDeleteTx()"
+    (cancelled)="deleteTxId.set(null)"
+  />
+
+  <app-drawer
+    [open]="editDrawerOpen()"
+    title="EDIT ACCOUNT"
+    (closed)="editDrawerOpen.set(false)"
+  >
+    <app-form-field label="ACCOUNT NAME">
+      <app-input [value]="formName()" (valueChange)="formName.set($event)" />
+    </app-form-field>
+    <app-form-field label="ACCOUNT TYPE">
+      <app-select
+        [value]="formType()"
+        [options]="typeOptions"
+        placeholder="SELECT TYPE..."
+        (valueChange)="formType.set($event)"
+      />
+    </app-form-field>
+    <app-form-field label="BALANCE">
+      <app-input
+        [value]="formBalance()"
+        (valueChange)="formBalance.set($event)"
+        type="number"
+        textAlign="right"
+      />
+    </app-form-field>
+    <div drawerFooter class="drawer-footer">
+      <app-button variant="ghost" [extraStyle]="{ flex: '1' }" (clicked)="editDrawerOpen.set(false)">CANCEL</app-button>
+      <app-button [extraStyle]="{ flex: '2' }" (clicked)="handleSaveAccount()">SAVE ACCOUNT</app-button>
+    </div>
+  </app-drawer>
+}

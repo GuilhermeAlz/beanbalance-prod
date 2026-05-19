@@ -1,0 +1,64 @@
+package estagio.opus.beanbalance.service;
+
+import estagio.opus.beanbalance.domain.entity.Category;
+import estagio.opus.beanbalance.domain.repository.CategoryRepository;
+import estagio.opus.beanbalance.domain.repository.UserRepository;
+import estagio.opus.beanbalance.exception.BusinessException;
+import estagio.opus.beanbalance.exception.ResourceNotFoundException;
+import estagio.opus.beanbalance.web.dto.category.CategoryRequest;
+import estagio.opus.beanbalance.web.dto.category.CategoryResponse;
+import estagio.opus.beanbalance.web.mapper.CategoryMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryService {
+
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final CategoryMapper categoryMapper;
+
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> findAllAccessibleByUser(UUID userId) {
+        return categoryRepository.findAllAccessibleByUser(userId).stream()
+                .map(categoryMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public CategoryResponse create(CategoryRequest request, UUID userId) {
+        Category category = categoryMapper.toEntity(request);
+        category.setUser(userRepository.getReferenceById(userId));
+        category.setCustom(true);
+        return categoryMapper.toResponse(categoryRepository.save(category));
+    }
+
+    @Transactional
+    public CategoryResponse update(UUID categoryId, CategoryRequest request, UUID userId) {
+        Category category = getOwnedCategoryOrThrow(categoryId, userId);
+        categoryMapper.updateEntity(request, category);
+        return categoryMapper.toResponse(categoryRepository.save(category));
+    }
+
+    @Transactional
+    public void delete(UUID categoryId, UUID userId) {
+        Category category = getOwnedCategoryOrThrow(categoryId, userId);
+        categoryRepository.delete(category);
+        try {
+            categoryRepository.flush();
+        } catch (DataIntegrityViolationException ex) {
+            throw new BusinessException("Cannot delete category: it is referenced by existing transactions or budgets");
+        }
+    }
+
+    private Category getOwnedCategoryOrThrow(UUID categoryId, UUID userId) {
+        return categoryRepository.findByIdAndUserId(categoryId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", categoryId));
+    }
+}

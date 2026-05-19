@@ -1,0 +1,70 @@
+<div class="shell">
+  <!-- Sidebar -->
+  <aside [ngStyle]="sidebarStyle()">
+    <!-- Logo -->
+    <div [ngStyle]="logoPaddingStyle()">
+      <div class="logo-box" (click)="toggleCollapsed()">BB</div>
+      @if (!collapsed()) {
+        <span class="logo-label">BEANBALANCE</span>
+      }
+    </div>
+
+    <!-- Nav Links -->
+    <nav class="nav">
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [ngStyle]="navLinkStyle(rla.isActive)"
+        >
+          <span class="nav-icon">{{ item.icon }}</span>
+          @if (!collapsed()) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <!-- User section -->
+    @if (!collapsed()) {
+      <div class="user-section">
+        <div class="username">{{ state.username() }}</div>
+        <button
+          [ngStyle]="logoutBtnStyle()"
+          (mouseenter)="logoutHovered.set(true)"
+          (mouseleave)="logoutHovered.set(false)"
+          (click)="handleLogout()"
+        >
+          [LOGOUT]
+        </button>
+      </div>
+    }
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <span class="page-title">{{ pageTitle() }}</span>
+      <span class="topbar-right">
+        LOGGED AS: <span class="topbar-username">{{ state.username() }}</span>
+        <button
+          [ngStyle]="topbarLogoutBtnStyle()"
+          (mouseenter)="topbarLogoutHovered.set(true)"
+          (mouseleave)="topbarLogoutHovered.set(false)"
+          (click)="handleLogout()"
+        >
+          [LOGOUT]
+        </button>
+      </span>
+    </header>
+
+    <!-- Page Content -->
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <app-toast-container />
+</div>

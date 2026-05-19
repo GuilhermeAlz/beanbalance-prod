@@ -1,0 +1,12 @@
+<div class="toggle-group">
+  @for (opt of options(); track opt.value; let i = $index) {
+    <button
+      type="button"
+      [class]="optionClass(opt.value)"
+      [class.first]="i === 0"
+      (click)="valueChange.emit(opt.value)"
+    >
+      {{ opt.label }}
+    </button>
+  }
+</div>

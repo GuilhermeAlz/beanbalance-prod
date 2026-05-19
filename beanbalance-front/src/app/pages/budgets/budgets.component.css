@@ -1,0 +1,149 @@
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 14px;
+  padding: 4px 12px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: border-color 100ms;
+}
+
+.nav-btn:hover {
+  border-color: #ffffff;
+}
+
+.month-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  min-width: 150px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cat-name {
+  font-size: 15px;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+}
+
+.over-badge {
+  font-size: 10px;
+  color: #888888;
+  border: 1px solid #444444;
+  padding: 2px 8px;
+  letter-spacing: 0.1em;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 12px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value.muted {
+  color: #888888;
+}
+
+.stat.center {
+  text-align: center;
+}
+
+.stat.right {
+  text-align: right;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  border-top: 1px solid #2a2a2a;
+  padding-top: 12px;
+}
+
+.footer-label {
+  font-size: 11px;
+  color: #888888;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #888888;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 100ms;
+}
+
+.action-btn:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}

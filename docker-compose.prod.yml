@@ -1,0 +1,16 @@
+# Production override — use pre-built images from GitHub Container Registry
+# instead of building from source.
+#
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# GHCR_USER must be set in your .env file (your GitHub username, lowercase).
+
+services:
+  auth-api:
+    image: ghcr.io/${GHCR_USER}/beanbalance-auth-ms:latest
+
+  beanbalance-api:
+    image: ghcr.io/${GHCR_USER}/beanbalance-api:latest
+
+  frontend:
+    image: ghcr.io/${GHCR_USER}/beanbalance-frontend:latest

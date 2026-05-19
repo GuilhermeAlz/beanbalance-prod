@@ -1,0 +1,57 @@
+<div class="page">
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-row">
+      <div class="logo-box">BB</div>
+      <span class="logo-text">BEANBALANCE</span>
+    </div>
+    <div class="logo-line"></div>
+  </div>
+
+  <!-- Form -->
+  <form class="form-panel" (submit)="handleSubmit($event)">
+    <div class="field">
+      <label class="field-label">EMAIL</label>
+      <input
+        type="email"
+        [value]="email()"
+        (input)="setEmail($any($event.target).value)"
+        (focus)="emailFocused.set(true)"
+        (blur)="emailFocused.set(false)"
+        [ngStyle]="emailInputStyle()"
+      />
+    </div>
+
+    <div class="field field-last">
+      <label class="field-label">PASSWORD</label>
+      <input
+        type="password"
+        [value]="password()"
+        (input)="setPassword($any($event.target).value)"
+        (focus)="passFocused.set(true)"
+        (blur)="passFocused.set(false)"
+        [ngStyle]="passInputStyle()"
+      />
+    </div>
+
+    @if (authError()) {
+      <div class="auth-error">{{ authError() }}</div>
+    }
+
+    <button
+      type="submit"
+      [ngStyle]="submitBtnStyle()"
+      (mouseenter)="submitHovered.set(true)"
+      (mouseleave)="submitHovered.set(false)"
+    >
+      LOGIN
+    </button>
+
+    <div class="footer-link">
+      DON'T HAVE AN ACCOUNT?
+      <a routerLink="/register" class="link">[REGISTER]</a>
+    </div>
+  </form>
+
+  <div class="version">v1.0</div>
+</div>

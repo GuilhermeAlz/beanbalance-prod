@@ -1,0 +1,77 @@
+name: Spring Boot CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'beanbalance/**'
+      - '.github/workflows/ci-spring.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'beanbalance/**'
+
+# Prevent two deploys from running at the same time
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run tests
+        working-directory: beanbalance
+        run: ./mvnw verify -B
+
+  build-push:
+    name: Build & Push Docker image
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: beanbalance
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/beanbalance-api:latest
+            ghcr.io/${{ github.repository_owner }}/beanbalance-api:${{ github.sha }}
+
+  deploy:
+    name: Deploy to EC2
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/beanbalance
+            git pull origin main
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull beanbalance-api
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker image prune -f

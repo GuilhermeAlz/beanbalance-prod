@@ -1,0 +1,165 @@
+.page {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ─── Summary Cards ────────────────────────────────────────────── */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  padding: 16px;
+}
+
+.card-label {
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+
+.card-value {
+  font-size: 28px;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.card-value-dim {
+  color: #888888;
+}
+
+.card-sub {
+  font-size: 11px;
+  color: #888888;
+}
+
+/* ─── Two Column Layout ─────────────────────────────────────────── */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 24px;
+}
+
+/* ─── Transactions Table ────────────────────────────────────────── */
+
+.table-box {
+  border: 1px solid #2a2a2a;
+  background: #111111;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 110px 110px 100px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.1em;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 110px 110px 100px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  align-items: center;
+}
+
+.col-muted {
+  color: #888888;
+}
+
+.col-white {
+  color: #ffffff;
+}
+
+.col-income {
+  color: #ffffff;
+}
+
+.col-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col-right {
+  text-align: right;
+}
+
+.col-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.view-all-row {
+  padding: 10px 12px;
+  text-align: right;
+}
+
+.view-all-btn {
+  background: none;
+  border: none;
+  color: #888888;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: color 100ms;
+}
+
+.view-all-btn:hover {
+  color: #ffffff;
+}
+
+/* ─── Budget Overview ───────────────────────────────────────────── */
+
+.budget-box {
+  border: 1px solid #2a2a2a;
+  background: #111111;
+  padding: 16px;
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.budget-name {
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+}
+
+.budget-detail {
+  font-size: 11px;
+  color: #888888;
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+
+.budget-divider {
+  height: 1px;
+  background: #2a2a2a;
+  margin: 14px 0;
+}
+
+.view-all-budget {
+  border-top: 1px solid #2a2a2a;
+  margin-top: 16px;
+  padding-top: 12px;
+  text-align: right;
+}

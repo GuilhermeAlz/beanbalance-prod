@@ -1,0 +1,10 @@
+<input
+  [type]="type()"
+  [value]="value()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  [ngStyle]="inputStyle()"
+  (input)="valueChange.emit($any($event.target).value)"
+  (focus)="focused.set(true)"
+  (blur)="focused.set(false)"
+/>

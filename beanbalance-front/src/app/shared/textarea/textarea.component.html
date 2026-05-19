@@ -1,0 +1,9 @@
+<textarea
+  [rows]="rows()"
+  [placeholder]="placeholder()"
+  [value]="value()"
+  [ngStyle]="textareaStyle()"
+  (input)="valueChange.emit($any($event.target).value)"
+  (focus)="focused.set(true)"
+  (blur)="focused.set(false)"
+></textarea>

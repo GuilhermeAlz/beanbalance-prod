@@ -1,0 +1,157 @@
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2a2a;
+  align-items: stretch;
+}
+
+.filter-item {
+  flex-shrink: 0;
+}
+
+.w160 { width: 160px; }
+.w130 { width: 130px; }
+
+.month-input {
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.month-input:focus {
+  border-color: #ffffff;
+}
+
+.clear-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #888888;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: all 100ms;
+}
+
+.clear-btn:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.table {
+  border: 1px solid #2a2a2a;
+  background: #111111;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 36px 80px 1fr 100px 110px 90px 110px 40px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.1em;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.no-tx {
+  padding: 32px;
+  text-align: center;
+  font-size: 12px;
+  color: #444444;
+  letter-spacing: 0.08em;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 36px 80px 1fr 100px 110px 90px 110px 40px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  align-items: center;
+  transition: background 100ms;
+}
+
+.row:hover {
+  background: #1a1a1a;
+}
+
+.col-idx  { color: #444444; }
+.col-date { color: #888888; }
+.col-desc { color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.col-cat  { color: #888888; overflow: hidden; text-overflow: ellipsis; }
+.col-acc  { color: #888888; }
+
+.col-amount {
+  color: #888888;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.col-amount.income { color: #ffffff; }
+
+.type-badge {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border: 1px solid #444444;
+  color: #555555;
+}
+.type-badge.income {
+  border-color: #2a2a2a;
+  color: #ffffff;
+}
+
+.col-del {
+  text-align: center;
+}
+
+.del-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #888888;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 14px;
+  padding: 0;
+  transition: color 100ms;
+}
+
+.row:hover .del-btn {
+  display: block;
+}
+
+.del-btn:hover {
+  color: #ffffff;
+}
+
+.pagination-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 11px;
+  color: #888888;
+  letter-spacing: 0.08em;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}

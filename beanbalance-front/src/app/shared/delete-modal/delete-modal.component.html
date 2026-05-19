@@ -1,0 +1,20 @@
+@if (open()) {
+  <div class="overlay" (click)="cancelled.emit()"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <span>CONFIRM DELETE</span>
+    </div>
+    <div class="modal-body">
+      <div>YOU ARE ABOUT TO DELETE:</div>
+      <div class="entity-name">{{ entityName() }}</div>
+      <div>THIS ACTION CANNOT BE UNDONE.</div>
+      @if (note()) {
+        <div>{{ note() }}</div>
+      }
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" type="button" (click)="cancelled.emit()">CANCEL</button>
+      <button class="confirm-btn" type="button" (click)="confirmed.emit()">DELETE</button>
+    </div>
+  </div>
+}

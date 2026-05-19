@@ -1,0 +1,8 @@
+<div class="toast-container">
+  @for (toast of state.toasts(); track toast.id) {
+    <div class="toast">
+      <span class="message">{{ toast.type === 'success' ? '✓ ' : '! ' }}{{ toast.message }}</span>
+      <button class="dismiss-btn" type="button" (click)="state.dismissToast(toast.id)">[X]</button>
+    </div>
+  }
+</div>

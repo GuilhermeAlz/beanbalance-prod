@@ -1,0 +1,27 @@
+.toggle-group {
+  display: flex;
+  width: 100%;
+}
+
+.opt-btn {
+  flex: 1;
+  padding: 8px 0;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-left: none;
+  transition: background 100ms, color 100ms;
+}
+
+.opt-btn.first {
+  border-left: 1px solid #2a2a2a;
+}
+
+.opt-btn.opt-active {
+  background: #ffffff;
+  color: #000000;
+}

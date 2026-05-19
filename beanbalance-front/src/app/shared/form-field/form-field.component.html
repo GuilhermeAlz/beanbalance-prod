@@ -1,0 +1,12 @@
+<div class="form-field">
+  <label class="field-label">
+    {{ label() }}
+    @if (hint()) {
+      <span class="hint">{{ hint() }}</span>
+    }
+  </label>
+  <ng-content />
+  @if (error()) {
+    <div class="error">! {{ error() }}</div>
+  }
+</div>
