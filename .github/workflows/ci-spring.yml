@@ -11,9 +11,9 @@ on:
     paths:
       - 'beanbalance/**'
 
-# Prevent two deploys from running at the same time
+# Prevent two Spring Boot deploys from overlapping
 concurrency:
-  group: deploy
+  group: deploy-spring
   cancel-in-progress: false
 
 jobs:
@@ -42,6 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Lowercase owner (Docker tags must be lowercase)
+        run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -55,8 +58,8 @@ jobs:
           context: beanbalance
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/beanbalance-api:latest
-            ghcr.io/${{ github.repository_owner }}/beanbalance-api:${{ github.sha }}
+            ghcr.io/${{ env.OWNER }}/beanbalance-api:latest
+            ghcr.io/${{ env.OWNER }}/beanbalance-api:${{ github.sha }}
 
   deploy:
     name: Deploy to EC2
