@@ -6,3 +6,17 @@ terraform/terraform.tfvars
 terraform/.terraform/
 terraform/*.tfstate
 terraform/*.tfstate.backup
+
+beanbalance/target/
+
+beanbalance-authentication-ms/bin/
+beanbalance-authentication-ms/obj/
+
+beanbalance-front/node_modules/
+beanbalance-front/dist/
+
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

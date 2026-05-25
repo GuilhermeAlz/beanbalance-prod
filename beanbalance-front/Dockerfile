@@ -13,8 +13,12 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=build /app/dist/beanbalance-front/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
-EXPOSE 80
+# DOMAIN is injected at container start via envsubst.
+# Only ${DOMAIN} is substituted — nginx variables like $host are left untouched.
+ENV DOMAIN=beanbalance.me
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80 443
+
+CMD ["/bin/sh", "-c", "envsubst '${DOMAIN}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]

@@ -35,8 +35,13 @@ services:
       context: ./beanbalance-front
       dockerfile: Dockerfile
     container_name: beanbalance-frontend
+    environment:
+      DOMAIN: "${DOMAIN}"
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - auth-api
       - beanbalance-api
