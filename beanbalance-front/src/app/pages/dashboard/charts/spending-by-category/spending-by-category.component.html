@@ -1,0 +1,29 @@
+<div class="chart-card">
+  <div class="chart-header">
+    <span class="chart-title">SPENDING BY CATEGORY</span>
+    <span class="chart-sub">THIS MONTH</span>
+  </div>
+
+  @if (slices().length === 0) {
+    <div class="empty">NO EXPENSES THIS MONTH</div>
+  } @else {
+    <div class="chart-content">
+      <div class="donut-wrap">
+        <canvas #canvas></canvas>
+        <div class="donut-center">
+          <div class="center-label">TOTAL</div>
+          <div class="center-value">{{ formatBRL(totalExpense()) }}</div>
+        </div>
+      </div>
+      <div class="legend-list">
+        @for (s of slices(); track s.name) {
+          <div class="legend-row">
+            <span class="legend-dot" [style.background]="s.color"></span>
+            <span class="legend-name">{{ s.name }}</span>
+            <span class="legend-pct">{{ pct(s.amount) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
