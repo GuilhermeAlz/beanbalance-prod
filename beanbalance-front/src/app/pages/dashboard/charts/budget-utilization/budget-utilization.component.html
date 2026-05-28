@@ -1,0 +1,49 @@
+<div class="chart-card">
+  <div class="chart-header">
+    <span class="chart-title">BUDGET UTILIZATION</span>
+    <span class="chart-sub">THIS MONTH</span>
+  </div>
+
+  @if (bars().length === 0) {
+    <div class="empty">NO BUDGETS THIS MONTH</div>
+  } @else {
+    <div class="bars-container">
+      @for (bar of bars(); track bar.id) {
+        <div class="bar-item">
+          <div class="bar-header">
+            <span class="bar-name">{{ bar.name }}</span>
+            <span class="bar-values">
+              <span class="bar-spent" [class.warning]="bar.status === 'warning'" [class.over]="bar.status === 'over'">
+                {{ formatBRL(bar.spent) }}
+              </span>
+              <span class="bar-sep">/</span>
+              <span class="bar-limit">{{ formatBRL(bar.limit) }}</span>
+            </span>
+          </div>
+          <div class="bar-track">
+            <div
+              class="bar-fill"
+              [class.warning]="bar.status === 'warning'"
+              [class.over]="bar.status === 'over'"
+              [style.width]="barWidth(bar)"
+            ></div>
+          </div>
+          <div class="bar-footer">
+            <span class="bar-pct" [class.warning]="bar.status === 'warning'" [class.over]="bar.status === 'over'">
+              {{ pctLabel(bar) }}
+            </span>
+            @if (bar.status === 'over') {
+              <span class="bar-over-label">OVER BUDGET</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="card-footer">
+    <button class="view-all-btn" (click)="goToBudgets()">
+      VIEW ALL BUDGETS →
+    </button>
+  </div>
+</div>
