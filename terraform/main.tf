@@ -8,8 +8,8 @@ terraform {
     }
   }
 
-  # Uncomment this block after you create an S3 bucket for state storage.
-  # Until then, state is kept locally in terraform.tfstate (do not commit it).
+  # Uncomment this block after S3 bucket is created for state storage.
+  # Until then, state is kept locally in terraform.tfstate.
   #
   # backend "s3" {
   #   bucket = "your-terraform-state-bucket"
