@@ -58,9 +58,9 @@
         <span class="col-cat">{{ getCategoryName(tx.categoryId).toUpperCase() }}</span>
         <span class="col-acc">{{ getAccountFirstWord(tx.accountId) }}</span>
         <span class="col-type">
-          <span class="type-badge" [class.income]="tx.type === 'INCOME'">{{ tx.type }}</span>
+          <span class="type-badge" [class.income]="tx.type === 'INCOME'" [class.expense]="tx.type === 'EXPENSE'">{{ tx.type }}</span>
         </span>
-        <span class="col-amount" [class.income]="tx.type === 'INCOME'">
+        <span class="col-amount" [class.income]="tx.type === 'INCOME'" [class.expense]="tx.type === 'EXPENSE'">
           {{ tx.type === 'INCOME' ? '+' : '−' }} {{ formatBRL(tx.amount) }}
         </span>
         <span class="col-del">

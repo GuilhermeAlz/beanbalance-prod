@@ -102,7 +102,8 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-.col-amount.income { color: #ffffff; }
+.col-amount.income  { color: #4ade80; }
+.col-amount.expense { color: #f87171; }
 
 .type-badge {
   font-size: 10px;
@@ -113,7 +114,11 @@
 }
 .type-badge.income {
   border-color: #2a2a2a;
-  color: #ffffff;
+  color: #4ade80;
+}
+.type-badge.expense {
+  border-color: #2a2a2a;
+  color: #f87171;
 }
 
 .col-del {

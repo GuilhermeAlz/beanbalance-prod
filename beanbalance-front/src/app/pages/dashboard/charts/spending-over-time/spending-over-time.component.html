@@ -1,0 +1,30 @@
+<div class="chart-card">
+  <div class="chart-header">
+    <span class="chart-title">INCOME VS EXPENSES</span>
+    <div class="legend">
+      <span class="legend-item"><span class="dot income"></span>INCOME</span>
+      <span class="legend-item"><span class="dot expense"></span>EXPENSES</span>
+    </div>
+
+    @if (isDailyMode()) {
+      <div class="month-nav">
+        <button class="nav-btn" (click)="prevMonth()">‹</button>
+        <span class="nav-label">{{ currentMonthLabel() }}</span>
+        <button class="nav-btn" [class.disabled]="!canGoNext()" [disabled]="!canGoNext()" (click)="nextMonth()">›</button>
+      </div>
+    }
+
+    <div class="month-selector">
+      @for (opt of viewOptions; track opt) {
+        <button
+          class="month-btn"
+          [class.active]="selectedView() === opt"
+          (click)="setView(opt)"
+        >{{ viewLabel(opt) }}</button>
+      }
+    </div>
+  </div>
+  <div class="chart-body">
+    <canvas #canvas></canvas>
+  </div>
+</div>

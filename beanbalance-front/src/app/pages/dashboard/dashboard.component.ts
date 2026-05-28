@@ -7,13 +7,20 @@ import { TransactionApiService } from '../../core/services/transaction-api.servi
 import { CategoryApiService } from '../../core/services/category-api.service';
 import { BudgetApiService } from '../../core/services/budget-api.service';
 import { SectionHeaderComponent } from '../../shared/section-header/section-header.component';
-import { ProgressBarComponent } from '../../shared/progress-bar/progress-bar.component';
-import { BadgeComponent } from '../../shared/badge/badge.component';
+import { SpendingOverTimeComponent } from './charts/spending-over-time/spending-over-time.component';
+import { SpendingByCategoryComponent } from './charts/spending-by-category/spending-by-category.component';
+import { BudgetUtilizationComponent } from './charts/budget-utilization/budget-utilization.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SectionHeaderComponent, ProgressBarComponent, BadgeComponent, UpperCasePipe],
+  imports: [
+    SectionHeaderComponent,
+    UpperCasePipe,
+    SpendingOverTimeComponent,
+    SpendingByCategoryComponent,
+    BudgetUtilizationComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -59,8 +66,6 @@ export class DashboardComponent implements OnInit {
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 5)
   );
-
-  budgets = this.budgetApi.items;
 
   getCat(id: string) {
     return this.categoryApi.items().find(c => c.id === id);

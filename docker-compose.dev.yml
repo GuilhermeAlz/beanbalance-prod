@@ -1,0 +1,112 @@
+# Local development stack — includes PostgreSQL databases.
+#
+# Usage: docker compose -f docker-compose.dev.yml up -d --build
+#
+# Default credentials are hardcoded for convenience. Do NOT use in production.
+# Access:
+#   Frontend      → http://localhost:4200
+#   Spring Boot   → http://localhost:8080
+#   Auth API      → http://localhost:5000
+#   beanbalance DB → localhost:5432
+#   auth DB        → localhost:5433
+
+services:
+
+  # ── Databases ─────────────────────────────────────────────────
+
+  beanbalance-db:
+    image: postgres:16-alpine
+    container_name: beanbalance-db
+    environment:
+      POSTGRES_DB: beanbalance
+      POSTGRES_USER: beanbalance
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - beanbalance_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beanbalance -d beanbalance"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  auth-db:
+    image: postgres:16-alpine
+    container_name: beanbalance-auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Backend Services ───────────────────────────────────────────
+
+  auth-api:
+    build:
+      context: ./beanbalance-authentication-ms
+      dockerfile: Dockerfile
+    container_name: beanbalance-auth-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=auth-db;Port=5432;Database=auth_db;Username=postgres;Password=postgres"
+      Jwt__Key: "dev-secret-key-super-segura-com-mais-de-32-caracteres!@#2024"
+      Jwt__Issuer: AuthMicroservice
+      Jwt__Audience: SpringBootApp
+      Cors__AllowedOrigins: "http://localhost:4200,http://localhost"
+    ports:
+      - "5000:8080"
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  beanbalance-api:
+    build:
+      context: ./beanbalance
+      dockerfile: Dockerfile
+    container_name: beanbalance-spring-api
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://beanbalance-db:5432/beanbalance"
+      SPRING_DATASOURCE_USERNAME: beanbalance
+      SPRING_DATASOURCE_PASSWORD: secret
+      APP_SECURITY_JWT_SECRET: "dev-secret-key-super-segura-com-mais-de-32-caracteres!@#2024"
+      APP_SECURITY_JWT_ISSUER: AuthMicroservice
+      APP_SECURITY_JWT_AUDIENCE: SpringBootApp
+      APP_CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://localhost"
+    ports:
+      - "8080:8080"
+    depends_on:
+      beanbalance-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Frontend ───────────────────────────────────────────────────
+
+  frontend:
+    build:
+      context: ./beanbalance-front
+      dockerfile: Dockerfile
+    container_name: beanbalance-frontend
+    environment:
+      DOMAIN: localhost
+    ports:
+      - "4200:80"
+    volumes:
+      - ./beanbalance-front/nginx.dev.conf:/etc/nginx/nginx.conf.template:ro
+    depends_on:
+      - auth-api
+      - beanbalance-api
+    restart: unless-stopped
+
+volumes:
+  beanbalance_db_data:
+  auth_db_data:
