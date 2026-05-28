@@ -11,7 +11,7 @@
     <!-- This Month Income -->
     <div class="card">
       <div class="card-label">THIS MONTH INCOME</div>
-      <div class="card-value">+ {{ formatBRL(monthIncome()) }}</div>
+      <div class="card-value card-value-income">+ {{ formatBRL(monthIncome()) }}</div>
       <div class="card-sub">{{ currentMonth | uppercase }}</div>
     </div>
 
@@ -23,7 +23,13 @@
     </div>
   </div>
 
-  <!-- Row 2 — Two Columns -->
+  <!-- Row 2 — Charts -->
+  <div class="charts-grid">
+    <app-spending-over-time />
+    <app-spending-by-category />
+  </div>
+
+  <!-- Row 3 — Transactions + Budget Utilization -->
   <div class="content-grid">
     <!-- Recent Transactions -->
     <div>
@@ -44,7 +50,7 @@
             <span class="col-white col-truncate">{{ tx.description }}</span>
             <span class="col-muted col-truncate">{{ getCat(tx.categoryId)?.name?.toUpperCase() || '—' }}</span>
             <span class="col-muted col-truncate">{{ getAccLabel(tx.accountId) }}</span>
-            <span class="col-right col-tabular" [class.col-income]="tx.type === 'INCOME'" [class.col-muted]="tx.type !== 'INCOME'">
+            <span class="col-right col-tabular" [class.col-income]="tx.type === 'INCOME'" [class.col-expense]="tx.type === 'EXPENSE'">
               {{ tx.type === 'INCOME' ? '+' : '−' }} {{ formatBRL(tx.amount) }}
             </span>
           </div>
@@ -59,39 +65,10 @@
       </div>
     </div>
 
-    <!-- Budget Overview -->
+    <!-- Budget Utilization Chart -->
     <div>
       <app-section-header title="BUDGET OVERVIEW" />
-      <div class="budget-box">
-        @for (b of budgets(); track b.id; let i = $index) {
-          <div>
-            <div class="budget-row">
-              <span class="budget-name">{{ b.categoryName.toUpperCase() }}</span>
-              @if (b.spent > b.limit) {
-                <app-badge variant="over">OVER BUDGET</app-badge>
-              }
-            </div>
-            <app-progress-bar [value]="b.spent" [max]="b.limit" />
-            <div class="budget-detail">
-              {{ formatBRL(b.spent) }} / {{ formatBRL(b.limit) }} —
-              @if (b.spent > b.limit) {
-                {{ formatBRL(b.spent - b.limit) }} OVER
-              } @else {
-                {{ formatBRL(b.limit - b.spent) }} REMAINING
-              }
-            </div>
-            @if (i < budgets().length - 1) {
-              <div class="budget-divider"></div>
-            }
-          </div>
-        }
-
-        <div class="view-all-budget">
-          <button class="view-all-btn" (click)="goToBudgets()">
-            VIEW ALL BUDGETS →
-          </button>
-        </div>
-      </div>
+      <app-budget-utilization />
     </div>
   </div>
 </div>

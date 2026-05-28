@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .card {
@@ -33,13 +33,27 @@
   text-align: right;
 }
 
+.card-value-income {
+  color: #4ade80;
+}
+
 .card-value-dim {
-  color: #888888;
+  color: #f87171;
 }
 
 .card-sub {
   font-size: 11px;
   color: #888888;
+}
+
+/* ─── Charts Row ──────────────────────────────────────────────── */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  min-height: 300px;
 }
 
 /* ─── Two Column Layout ─────────────────────────────────────────── */
@@ -86,7 +100,11 @@
 }
 
 .col-income {
-  color: #ffffff;
+  color: #4ade80;
+}
+
+.col-expense {
+  color: #f87171;
 }
 
 .col-truncate {
@@ -121,45 +139,4 @@
 
 .view-all-btn:hover {
   color: #ffffff;
-}
-
-/* ─── Budget Overview ───────────────────────────────────────────── */
-
-.budget-box {
-  border: 1px solid #2a2a2a;
-  background: #111111;
-  padding: 16px;
-}
-
-.budget-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.budget-name {
-  font-size: 13px;
-  color: #ffffff;
-  letter-spacing: 0.1em;
-}
-
-.budget-detail {
-  font-size: 11px;
-  color: #888888;
-  margin-top: 6px;
-  letter-spacing: 0.04em;
-}
-
-.budget-divider {
-  height: 1px;
-  background: #2a2a2a;
-  margin: 14px 0;
-}
-
-.view-all-budget {
-  border-top: 1px solid #2a2a2a;
-  margin-top: 16px;
-  padding-top: 12px;
-  text-align: right;
 }
